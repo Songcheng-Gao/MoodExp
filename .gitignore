@@ -1,0 +1,24 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+
+# Custom gitignore begins here
+*.apk
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+.classpath
+.project
+.gradle
+/*/local.properties
+/*/out
+/*/*/build
+/*/*/production
+*~
+*.swp
