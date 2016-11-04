@@ -5,9 +5,9 @@ HealthyLife
 本项目是一个基于安卓手机数据来预测用户情绪的工具，目前仓库中版本是用于收集数据的Demo。  
 
 ## 参与APP测试说明
-<img width="200" src="https://cloud.githubusercontent.com/assets/10338754/16143982/d0fb26d0-34a2-11e6-85e3-215a99795ec9.png">
+<img width="200" src="https://cloud.githubusercontent.com/assets/22810336/20000770/2494d60e-a2b4-11e6-9c93-28a416e8df2b.png">
 * 志愿者下载并安装APP：
- 从[这里](https://github.com/Kai-Zhang/HealthyLife/releases/download/v1.1.2/app-release.apk)下载安装包安装在手机上。
+ 从[这里](https://github.com/Songcheng-Gao/MoodExp/releases/download/1.1/app-debug.apk)下载安装包安装在手机上。
  或者扫码下载。
 * 安装之后首次开启时，在Android 5.1以上的版本需要用户通过权限要求。
 * 应用每天在10：00，16：00，22：00时通过通知提醒用户反馈自己在这一段时间内的情绪状态，点击通知便可从六种情绪中选择最接近自己情绪状态的选项。请用户注意：
