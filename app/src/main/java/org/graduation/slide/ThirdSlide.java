@@ -91,6 +91,18 @@ public class ThirdSlide extends Fragment
                 Email=TextEmail.getText().toString();
                 PhoneNumber=TextPhoneNumber.getText().toString();
 
+                if(Email.length()==0)
+                {
+                    Toast.makeText(MainApplication.getContext(),"请填写邮箱",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(PhoneNumber.length()==0)
+                {
+                    Toast.makeText(MainApplication.getContext(),"请填写联系电话",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                 if(Email.length()==0) Email="null";
                 else editor.putString("email",Email);
 

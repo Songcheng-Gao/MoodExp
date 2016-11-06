@@ -78,6 +78,7 @@ public class ChartActivity extends Activity
     public ArrayList< MyEmotionSet > emotionList;
     public ArrayList< Integer> stepList;
     public ArrayList< Float> volumeList;
+    public ArrayList< String> dateList;
 
     Cursor cursor;
     public int cnt;
@@ -108,6 +109,7 @@ public class ChartActivity extends Activity
         emotionList=new ArrayList<MyEmotionSet>();
         stepList=new ArrayList<Integer>();
         volumeList=new ArrayList<Float>();
+        dateList=new ArrayList<String>();
 
         getDBEmotionValue();
 
@@ -149,6 +151,14 @@ public class ChartActivity extends Activity
         while(cursor.moveToNext())
         {
             stepList.add(cursor.getInt(1));
+        }
+
+        cursor=DatabaseManager.getDatabaseManager().queryDailyTime();
+//        private static final String CREATE_DAILY_TIME="create table dailyTime ("
+//                +"date varchar(80))";
+        while(cursor.moveToNext())
+        {
+            dateList.add(cursor.getString(0));
         }
 
     }
@@ -198,7 +208,8 @@ public class ChartActivity extends Activity
         barXVals=new ArrayList<String>();//横坐标描述词
         for(int i=0;i<cnt;i++)
         {
-            barXVals.add("day"+(i+1));
+            //barXVals.add(""+i);
+            barXVals.add(dateList.get(i));
         }
 
         barYVals=new ArrayList< ArrayList<BarEntry> >();
@@ -342,7 +353,8 @@ public class ChartActivity extends Activity
         for(int i=0;i<stepList.size();i++)
         //for(int i=0;i<cnt;i++)
         {
-            stepLineXVals.add("day"+(i+1));
+            //stepLineXVals.add(""+i);
+            stepLineXVals.add(dateList.get(i));
         }
 
         stepLineYVals=new ArrayList<Entry>();
@@ -382,7 +394,8 @@ public class ChartActivity extends Activity
         for(int i=0;i<volumeList.size();i++)
         //for(int i=0;i<cnt;i++)
         {
-            volumeLineXVals.add("day"+(i+1));
+            //volumeLineXVals.add(""+i);
+            volumeLineXVals.add(dateList.get(i));
         }
 
         volumeLineYVals=new ArrayList<Entry>();

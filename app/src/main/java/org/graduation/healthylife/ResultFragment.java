@@ -47,15 +47,17 @@ public class ResultFragment extends Fragment
             {
                 if(cnt>=57)
                 {
-                    new ContactCollector().collect();
+
+                    saveDailyTime();
                     readDB();
                     saveDailyStep();
                     saveDailyVolume();
-
+                    new ContactCollector().collect();
                 }
                 else
                 {//Log.e("contact","-1");
                     //new ContactCollector().collect();
+                    saveDailyTime();
                     readDB();
                     saveDailyStep();
                     saveDailyVolume();
@@ -66,6 +68,13 @@ public class ResultFragment extends Fragment
         return view;
     }
 
+
+    public void saveDailyTime()
+    {
+
+        DatabaseManager manager = DatabaseManager.getDatabaseManager();
+        manager.saveDailyTime();
+    }
 
     public void saveDailyStep()
     {

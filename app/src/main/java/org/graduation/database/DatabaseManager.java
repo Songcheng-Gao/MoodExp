@@ -3,6 +3,7 @@ package org.graduation.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.format.Time;
 
 /**
  * Created by javan on 2016/3/8.
@@ -65,6 +66,10 @@ public class DatabaseManager {
         db.rawQuery("select * from audio",null);
         return db.rawQuery("select * from audio",null);
     }
+    public Cursor queryDailyTime()
+    {
+        return db.rawQuery("select * from dailyTime",null);
+    }
     public Cursor queryEmotion(){
         return db.rawQuery("select * from emotion",null);
     }
@@ -73,6 +78,24 @@ public class DatabaseManager {
     }
     public Cursor queryDailyVolume(){
         return db.rawQuery("select * from dailyVolume",null);
+    }
+
+    public void saveDailyTime()
+    {
+        ContentValues values = new ContentValues();
+
+        Time t=new Time();//"GMT+8"
+        t.setToNow(); // 取得系统时间。
+        int year = t.year;
+        int month = t.month;
+        int date = t.monthDay;
+        int hour = t.hour; // 0-23
+        int minute = t.minute;
+        int second = t.second;
+
+        values.put("date",month+"/"+date+" "+hour +":"+minute) ;
+
+        db.insert("dailyTime", null, values);
     }
 
     public void saveDailyStep(int stepCount) {

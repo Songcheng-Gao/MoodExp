@@ -89,6 +89,8 @@ public class HealthyLifeDBHelper extends SQLiteOpenHelper{
     private static final String CREATE_DAILY_VOLUME="create table dailyVolume ("
             +"time varchar(80),"
             +"volume float)";
+    private static final String CREATE_DAILY_TIME="create table dailyTime ("
+            +"date varchar(80))";
     public HealthyLifeDBHelper()
     {
         super(MainApplication.getContext(), DATABASE_NAME, null, DATABASE_VERSION);
@@ -119,6 +121,7 @@ public class HealthyLifeDBHelper extends SQLiteOpenHelper{
         db.execSQL(CREATE_PhoneInfo);
         db.execSQL(CREATE_DAILY_STEP);
         db.execSQL(CREATE_DAILY_VOLUME);
+        db.execSQL(CREATE_DAILY_TIME);
     }
 
     @Override

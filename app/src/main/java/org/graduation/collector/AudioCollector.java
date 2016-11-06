@@ -3,6 +3,7 @@ package org.graduation.collector;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.provider.Settings;
 import android.util.Log;
 
 import org.graduation.database.DatabaseManager;
@@ -17,6 +18,18 @@ public class AudioCollector implements ICollector {
     private static boolean collectFlag=false;
     private static int[] mSampleRates = new int[] { 8000, 11025, 22050, 44100 };
     private int bufferSize = 0;
+    static AudioDemo audio;
+    static boolean bIsAudioDemoCreate=false;
+
+    public AudioCollector()
+    {
+        if(bIsAudioDemoCreate==false) {
+            audio = new AudioDemo();
+            audio.statAudio();
+            bIsAudioDemoCreate = true;
+        }
+    };
+
 
     public AudioRecord findAudioRecord() {
         for (int rate : mSampleRates) {
@@ -54,42 +67,19 @@ public class AudioCollector implements ICollector {
     }
 
 
-    public void collect() {
-        mAudioRecord = findAudioRecord();
-        if (mAudioRecord == null) {
-            Log.e(TAG, "mAudioRecord initialization failed");
-            return;
-        }
-        isGetVoiceRun = true;
-        mAudioRecord.startRecording();
-        long startTime=System.currentTimeMillis();
-        short[] buffer = new short[bufferSize];
-        //r是实际读取的数据长度，一般而言r会小于buffer size
-        int r = mAudioRecord.read(buffer, 0, bufferSize);
-        Log.d(TAG, "data size " + r);
-        long v = 0;
-        // 将 buffer 内容取出，进行平方和运算
-        for (short aBuffer : buffer) {
-            v += aBuffer * aBuffer;
-        }
-        // 平方和除以数据总长度，得到音量大小。
-        double mean = v / (double) r;
-        double volume = 10 * Math.log10(mean);
-        mAudioRecord.stop();
-        mAudioRecord.release();
-        mAudioRecord = null;
-        isGetVoiceRun=false;
+    public void collect()
+    {
 
-        //这是时间和分贝值
-        Log.d(TAG, "time: " + startTime);
-        Log.d(TAG, "decibel: " + volume);
+        Log.e("vol",audio.getVolume()+"");
 
-        DatabaseManager.getDatabaseManager().saveAudio(startTime, volume);
+        DatabaseManager.getDatabaseManager().saveAudio(System.currentTimeMillis(), audio.getVolume());
     }
 
     @Override
-    public void startCollect() {
-        if (isGetVoiceRun) {
+    public void startCollect()
+    {
+        if (isGetVoiceRun)
+        {
             return;
         }
         collectFlag=true;
@@ -113,4 +103,81 @@ public class AudioCollector implements ICollector {
     public void stopCollect() {
         collectFlag=false;
     }
+
+    public class AudioDemo
+    {
+
+        private static final String TAG = "AudioRecord";
+        static final int SAMPLE_RATE_IN_HZ = 8000;
+        final int BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE_IN_HZ,
+                AudioFormat.CHANNEL_IN_DEFAULT, AudioFormat.ENCODING_PCM_16BIT);
+        AudioRecord mAudioRecord;
+        boolean isGetVoiceRun;
+        Object mLock;
+
+        double volume=20;
+
+        public AudioDemo()
+        {
+            mLock = new Object();
+        }
+
+        public double getVolume()
+        {
+            //Log.e("test",volume+"");
+            if(volume>100) return 100;
+            else  return volume;
+        }
+
+        public void statAudio()
+        {
+            if (isGetVoiceRun) {
+                Log.e(TAG, "还在录着呢");
+                return;
+            }
+            mAudioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
+                    SAMPLE_RATE_IN_HZ, AudioFormat.CHANNEL_IN_DEFAULT,
+                    AudioFormat.ENCODING_PCM_16BIT, BUFFER_SIZE);
+            if (mAudioRecord == null) {
+                Log.e("sound", "mAudioRecord初始化失败");
+            }
+            isGetVoiceRun = true;
+
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run() {
+                    mAudioRecord.startRecording();
+                    short[] buffer = new short[BUFFER_SIZE];
+                    while (isGetVoiceRun) {
+                        //r是实际读取的数据长度，一般而言r会小于buffersize
+                        int r = mAudioRecord.read(buffer, 0, BUFFER_SIZE);
+                        long v = 0;
+                        // 将 buffer 内容取出，进行平方和运算
+                        for (int i = 0; i < buffer.length; i++) {
+                            v += buffer[i] * buffer[i];
+                        }
+                        // 平方和除以数据总长度，得到音量大小。
+                        double mean = v / (double) r;
+                        volume = 10 * Math.log10(mean);
+                        //Log.d("test", "分贝值:" + volume);
+                        // 大概一秒十次
+                        synchronized (mLock) {
+                            try {
+                                mLock.wait(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    mAudioRecord.stop();
+                    mAudioRecord.release();
+                    mAudioRecord = null;
+                }
+            }).start();
+        }
+    }
+
+
+
 }

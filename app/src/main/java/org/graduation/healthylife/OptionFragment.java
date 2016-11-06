@@ -114,7 +114,7 @@ public class OptionFragment extends Fragment {
 
                 SharedPreferenceManager sm = SharedPreferenceManager.getManager();
                 long lastTime = sm.getLong("lasttime", 0);
-                if (time - lastTime <= 5 * 60 * 60 * 1000) {//5 * 60 * 60 * 1000
+                if (time - lastTime <= 1000) {//5 * 60 * 60 * 1000
                     Toast.makeText(getActivity(), "您在5小时内提交过心情，请勿频繁提交", Toast.LENGTH_SHORT).show();
                     return;
                 }

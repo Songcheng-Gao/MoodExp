@@ -24,7 +24,8 @@ import java.util.List;
 public class CollectingService extends Service {
     private static final String TAG = "CollectingService";
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
         _collectorList = new ArrayList<>();
         _collectorList.add(new AudioCollector());
@@ -35,11 +36,13 @@ public class CollectingService extends Service {
         _collectorList.add(GpsCollector.getCollector());
         _collectorList.add(MagneticCollector.getCollector());
         _collectorList.add(GyroscopeCollector.getCollector());
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1)
+        {
             _collectorList.add(new UsageCollector());
         }
         Log.d(TAG, "Service started.");
         collect();
+
         new Thread(new Runnable()
         {
             @Override
@@ -80,8 +83,10 @@ public class CollectingService extends Service {
 
     private List<ICollector> _collectorList;
 
-    private void collect() {
-        for (ICollector g : _collectorList) {
+    private void collect()
+    {
+        for (ICollector g : _collectorList)
+        {
             g.startCollect();
         }
     }

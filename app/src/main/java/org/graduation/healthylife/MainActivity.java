@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity
                             .setSmallIcon(R.mipmap.icon)
                             .setContentTitle( "请打开GPS开关"  )
                             .setContentText("GPS数据是实验数据重要的一部分，请打开GPS开关")
-                            .setDefaults(Notification.DEFAULT_SOUND )//| Notification.DEFAULT_VIBRATE)
+                            .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                             .setWhen(System.currentTimeMillis())
                             .setContentIntent(pi)
                             .build();
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity
                             .setSmallIcon(R.mipmap.icon)
                             .setContentTitle( "请打开WLAN开关"  )
                             .setContentText("WLAN数据是实验数据重要的一部分，请打开WLAN开关")
-                            .setDefaults(Notification.DEFAULT_SOUND )//| Notification.DEFAULT_VIBRATE)
+                            .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                             .setWhen(System.currentTimeMillis())
                             .setContentIntent(pi)
                             .build();
@@ -222,12 +222,14 @@ public class MainActivity extends AppCompatActivity
                 new Intent(this, GatherAlarmReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime(),
-                5 * 60 * 1000,//5 min
+                10*1000,
+                //5 * 60 * 1000,//5 min
                 gatherPendingIntent);
         alarmManager.cancel(gatherPendingIntent);
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime(),
-                5 * 60 * 1000,
+                10*1000,
+                //5 * 60 * 1000,
                 gatherPendingIntent);
         alarmManager2 = (AlarmManager)this
                 .getSystemService(Context.ALARM_SERVICE);
